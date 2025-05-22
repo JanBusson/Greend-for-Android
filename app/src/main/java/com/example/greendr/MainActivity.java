@@ -1,5 +1,6 @@
 package com.example.greendr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -11,8 +12,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button halloButton = findViewById(R.id.button);
+        Button openSecondBtn = findViewById(R.id.button_open_second);
 
+        openSecondBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, LoginView.class);
+            startActivity(intent);
+        });
 
     }
 }
