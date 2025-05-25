@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class StartView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Intent object für den Bildschirmwechsel
         openSecondBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, LoginView.class);
+            Intent intent = new Intent(StartView.this, LoginView.class);
             startActivity(intent);
         });
 
