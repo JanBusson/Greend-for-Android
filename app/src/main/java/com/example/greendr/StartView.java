@@ -10,7 +10,7 @@ public class StartView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.start_view);
 
         //speichert den Button aus dem ausgewähltem Layout
         Button openSecondBtn = findViewById(R.id.button_open_second);
