@@ -13,23 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- nur eine Activity weil Fragements genutzt werden -->
         <activity
-            android:name=".StartView"
+            android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/AppTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".LoginView"
-            android:exported="false"
-            android:label="Login"
-            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

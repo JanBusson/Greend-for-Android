@@ -10,6 +10,6 @@ public class MyApp extends Application {
 
         // Firebase global initialisieren
         FirebaseApp.initializeApp(this);
-        FirebaseInstance.init();  // unsere eigene Methode
+        FirebaseInstance.init();
     }
 }

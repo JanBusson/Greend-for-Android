@@ -27,9 +27,18 @@ public class LoginView extends AppCompatActivity {
         //speichert den Button aus dem ausgewähltem Layout
         Button openSecondBtn = findViewById(R.id.go_back_start);
 
-        //Logout Bildschirmwechsel
+        //Bildschirmwechsel
         openSecondBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginView.this, StartView.class);
+            Intent intent = new Intent(LoginView.this, StartFragment.class);
+            startActivity(intent);
+        });
+
+
+        Button continueLogin = findViewById(R.id.continueLogin);
+
+        //Bildschirmwechsel
+        continueLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginView.this, WelcomeFragment.class);
             startActivity(intent);
         });
     }
