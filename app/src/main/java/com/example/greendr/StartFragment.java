@@ -28,6 +28,8 @@ public class StartFragment extends Fragment {
         Button registerBtn = view.findViewById(R.id.button_register);
         Button helpBtn = view.findViewById(R.id.button_help);
 
+        //Lambda Schreibweise, Der Parameter v ist durch OnClickListener gegeben
+        //durch die Verwendung von Lambda muss onClick nicht ausgeschrieben werden
         openSecondBtn.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).openFragment(new LoginFragment());

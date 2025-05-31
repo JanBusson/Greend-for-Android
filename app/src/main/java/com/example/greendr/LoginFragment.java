@@ -13,7 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+/*##################################################
+Ermöglich User Login mit Kontrolle in der Datenbank.
+##################################################*/
 public class LoginFragment extends Fragment {
+
+    //Firebase Authentication für die Verwaltung
 
     public LoginFragment() {}
 
@@ -23,30 +30,38 @@ public class LoginFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        EditText inputName = view.findViewById(R.id.input_name);
+        EditText inputEmail = view.findViewById(R.id.input_email);
         EditText inputPassword = view.findViewById(R.id.input_password);
         Button loginButton = view.findViewById(R.id.button_login);
         Button gobackButton = view.findViewById(R.id.button_back);
 
+        //Instanz der Firebase Authentifizierung
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        //auslesen der Eingabefelder
         loginButton.setOnClickListener(v -> {
-            String name = inputName.getText().toString().trim();
+            String mail = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
 
             //Check ob ausgefüllt
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(password)) {
+            if (TextUtils.isEmpty(mail) || TextUtils.isEmpty(password)) {
                 Toast.makeText(getContext(), "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Hier kannst du später echte Prüfung hinzufügen
-            if (checkLogin(name, password)) {
-                Toast.makeText(getContext(), "Login erfolgreich!", Toast.LENGTH_SHORT).show();
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).openFragment(new WelcomeFragment());
-                }
-            } else {
-                Toast.makeText(getContext(), "Login fehlgeschlagen!", Toast.LENGTH_SHORT).show();
-            }
+            // Firebase-Login
+            mAuth.signInWithEmailAndPassword(mail, password)
+                    //Complete Listener gibt eine Rückmeldung ob das Login erfolgreich war
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getContext(), "Login erfolgreich!", Toast.LENGTH_SHORT).show();
+                            if (getActivity() instanceof MainActivity) {
+                                ((MainActivity) getActivity()).openFragment(new WelcomeFragment());
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Login fehlgeschlagen: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
         });
 
         gobackButton.setOnClickListener(v -> {
@@ -56,8 +71,4 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    // Dummy-Login-Check
-    private boolean checkLogin(String name, String password) {
-        return name.equals("admin") && password.equals("1234");
-    }
 }

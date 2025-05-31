@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Diese Methode hilft beim Knopfdruck auf einen anderen Bereich zu wechseln
+    //Diese Methode hilft beim Knopfdruck auf einen anderes Fragment zu wechseln
     public void openFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
