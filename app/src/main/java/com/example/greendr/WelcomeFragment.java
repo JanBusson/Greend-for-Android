@@ -26,52 +26,27 @@ public class WelcomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.welcome_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 
-        Button logoutBtn = view.findViewById(R.id.logout);
+        Button matchBtn = view.findViewById(R.id.button_find_match);
+        Button chatBtn = view.findViewById(R.id.button_chat);
+        Button logoutBtn = view.findViewById(R.id.button_logout);
 
-        logoutBtn.setOnClickListener(v -> {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                String uid = user.getUid();
-
-                DatabaseReference userRef = FirebaseDatabase.getInstance()
-                        .getReference("users")
-                        .child(uid);
-
-                userRef.setValue(new UserProfile("Anna", 25, "Sport, Musik"));
-            }
-
-            // Fragmentwechsel zurück zur Startansicht
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).openFragment(new StartFragment());
-            }
+        matchBtn.setOnClickListener(v -> {
+            // TODO: MatchActivity starten
+            Log.d("WelcomeFragment", "Match finden geklickt");
         });
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        chatBtn.setOnClickListener(v -> {
+            // TODO: ChatActivity starten
+            Log.d("WelcomeFragment", "Chatten geklickt");
+        });
 
-        String testEmail = "testuser@example.com";
-        String testPassword = "123456";
-
-        auth.createUserWithEmailAndPassword(testEmail, testPassword)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = auth.getCurrentUser();
-                        String uid = user.getUid();
-
-                        UserProfile testProfile = new UserProfile("Anna", 25, "Sport, Musik");
-
-                        DatabaseReference userRef = FirebaseInstance.getDatabase()
-                                .getReference("users").child(uid);
-
-                        userRef.setValue(testProfile);
-
-                        Log.d("FirebaseAuth", "Testuser erstellt: " + uid);
-                    } else {
-                        Log.e("FirebaseAuth", "Fehler: " + task.getException().getMessage());
-                    }
-                });
-
+        logoutBtn.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            // TODO: Zurück zum LoginScreen navigieren
+            Log.d("WelcomeFragment", "Logout ausgeführt");
+        });
 
         return view;
     }

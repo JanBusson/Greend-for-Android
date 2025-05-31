@@ -1,3 +1,15 @@
+<!-- Ressourcen für bessere Skallierbarkeit, Variablenname Englisch- Inhalt deutsch -->
+
 <resources>
     <string name="app_name">Greendr</string>
+    <string name="button_login">Login</string>
+    <string name="button_logout">Logout</string>
+    <string name="button_register">Registrieren</string>
+    <string name="button_passwordRecovery">Passwort vergessen?</string>
+    <string name="promt_username">Benutzername</string>
+    <string name="promt_password">Passwort</string>
+    <string name="button_back">Go Back</string>
+    <string name="button_findMatch">Match finden</string>
+    <string name="chat">Chatten</string>
+    <string name="promt_welcome">Willkommen bei Greendr!</string>
 </resources>
