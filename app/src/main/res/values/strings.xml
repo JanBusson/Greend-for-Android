@@ -12,4 +12,6 @@
     <string name="button_findMatch">Match finden</string>
     <string name="chat">Chatten</string>
     <string name="promt_welcome">Willkommen bei Greendr!</string>
+    <string name="button_likedProfiles">Meine Likes</string>
+    <string name="button_filter">Filter festlegen</string>
 </resources>

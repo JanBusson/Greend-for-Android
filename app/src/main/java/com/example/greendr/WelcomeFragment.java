@@ -1,5 +1,6 @@
 package com.example.greendr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,8 @@ public class WelcomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 
         Button matchBtn = view.findViewById(R.id.button_find_match);
+        Button filterBtn = view.findViewById(R.id.button_filter);
+        Button likesBtn = view.findViewById(R.id.button_liked);
         Button chatBtn = view.findViewById(R.id.button_chat);
         Button logoutBtn = view.findViewById(R.id.button_logout);
 
@@ -37,15 +40,34 @@ public class WelcomeFragment extends Fragment {
             Log.d("WelcomeFragment", "Match finden geklickt");
         });
 
+        filterBtn.setOnClickListener(v -> {
+            // TODO: MatchActivity starten
+            Log.d("WelcomeFragment", "Filter festlegen geklickt");
+        });
+
+        likesBtn.setOnClickListener(v -> {
+            // TODO: MatchActivity starten
+            Log.d("WelcomeFragment", "LikedUsers geklickt");
+        });
+
         chatBtn.setOnClickListener(v -> {
             // TODO: ChatActivity starten
             Log.d("WelcomeFragment", "Chatten geklickt");
         });
 
+        //Ausloggen
         logoutBtn.setOnClickListener(v -> {
+            //Ausloggen aus Firebase Auth
             FirebaseAuth.getInstance().signOut();
-            // TODO: Zurück zum LoginScreen navigieren
-            Log.d("WelcomeFragment", "Logout ausgeführt");
+
+
+            Intent intent = new Intent(requireActivity(), MainActivity.class);
+            //schließt alle im Backstack bis bei Main Activity angekommen
+            //MainActivity auf einen neuen Task (neuer Stapel)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            //schließt activity komplett
+            requireActivity().finish();
         });
 
         return view;
