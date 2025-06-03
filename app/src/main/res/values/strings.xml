@@ -14,4 +14,6 @@
     <string name="promt_welcome">Welcome to Greendr!</string>
     <string name="button_myMatches">My Matches</string>
     <string name="button_filter">Set Filters</string>
+    <string name="button_like">💕</string>
+    <string name="button_reject">❌</string>
 </resources>

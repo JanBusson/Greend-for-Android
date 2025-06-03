@@ -32,7 +32,7 @@ public class StartFragment extends Fragment {
         //durch die Verwendung von Lambda muss onClick nicht ausgeschrieben werden
         openSecondBtn.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).openFragment(new LoginFragment());
+                ((MainActivity) getActivity()).openFragment(new WelcomeFragment());
             }
         });
 
