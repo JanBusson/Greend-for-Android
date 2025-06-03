@@ -60,7 +60,6 @@ public class WelcomeFragment extends Fragment {
             //Ausloggen aus Firebase Auth
             FirebaseAuth.getInstance().signOut();
 
-
             Intent intent = new Intent(requireActivity(), MainActivity.class);
             //schließt alle im Backstack bis bei Main Activity angekommen
             //MainActivity auf einen neuen Task (neuer Stapel)
