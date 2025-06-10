@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 /*##################################################
-Ermöglich User Login mit Kontrolle in der Datenbank.
+Ermöglich User Login mit Firebase
 ##################################################*/
 public class LoginFragment extends Fragment {
 
@@ -54,12 +54,12 @@ public class LoginFragment extends Fragment {
                     //Complete Listener gibt eine Rückmeldung ob das Login erfolgreich war
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), "Login erfolgreich!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.message_loginSuccess, Toast.LENGTH_SHORT).show();
                             if (getActivity() instanceof MainActivity) {
                                 ((MainActivity) getActivity()).openFragment(new WelcomeFragment());
                             }
                         } else {
-                            Toast.makeText(getContext(), "Login fehlgeschlagen: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), getString(R.string.message_loginError) + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
         });
