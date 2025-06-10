@@ -20,6 +20,7 @@ import java.util.List;
 
 public class FiltersFragment extends Fragment {
 
+    //TODO: ChipGroup
     private RangeSlider ageSlider;
     private CheckBox maleCheckbox, femaleCheckbox, nonBinaryCheckbox;
     private CheckBox interestedMenCheckbox, interestedWomenCheckbox, interestedNBCheckbox;

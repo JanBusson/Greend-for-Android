@@ -27,6 +27,7 @@ public class WelcomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 
         Button matchBtn = view.findViewById(R.id.button_find_match);
@@ -39,10 +40,12 @@ public class WelcomeFragment extends Fragment {
 
         matchBtn.setOnClickListener(v -> {
             // TODO: MatchActivity starten
-            Log.d("WelcomeFragment", "Match finden geklickt");
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openFragment(new FindMatchFragment());
+            }
         });
 
-        //TODO: Filter durchgehen und schauen dass alle Elemente "Sinnvolll sind"
+        //TODO: Filter durchgehen und schauen dass alle Elemente "Sinnvolll sind
         filterBtn.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).openFragment(new FiltersFragment());

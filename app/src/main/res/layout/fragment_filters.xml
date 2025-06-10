@@ -16,6 +16,7 @@
         android:layout_weight="1"
         android:padding="16dp">
 
+        <!-- Inhalt der Filter muss überarbeitet und auf das Nutzermodell angepasst werden -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
