@@ -38,12 +38,13 @@
         android:text="@string/button_myMatches"
         android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/button_chat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/chat"
-        android:layout_marginBottom="16dp" />
+<!--        Fällt weg
+<           Button-->
+<!--        android:id="@+id/button_chat"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/chat"-->
+<!--        android:layout_marginBottom="16dp" />-->
 
     <Button
         android:id="@+id/button_logout"

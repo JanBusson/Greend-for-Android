@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="?attr/actionBarSize"
+    android:fitsSystemWindows="true">
+    <!--padding Top => sorgt dafür dass der Text nicht vom Banner oben überschattet wird-->
+
+    <!-- Scrollbarer Inhalt -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <!-- Inhalt der Filter muss überarbeitet und auf das Nutzermodell angepasst werden -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Age Range -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Age Range" />
+
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/slider_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:valueFrom="18"
+                android:valueTo="100"
+                android:stepSize="1" />
+
+            <!-- Gender -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender"
+                android:paddingTop="12dp" />
+
+            <CheckBox
+                android:id="@+id/checkbox_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male" />
+            <CheckBox
+                android:id="@+id/checkbox_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female" />
+            <CheckBox
+                android:id="@+id/checkbox_nonbinary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Non-binary" />
+
+            <!-- Interested In -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Interested In"
+                android:paddingTop="12dp" />
+
+            <CheckBox
+                android:id="@+id/checkbox_interested_men"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Men" />
+            <CheckBox
+                android:id="@+id/checkbox_interested_women"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Women" />
+            <CheckBox
+                android:id="@+id/checkbox_interested_nb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Non-binary" />
+
+            <!-- Usage of Drugs -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usage of Drugs"
+                android:paddingTop="12dp" />
+
+            <CheckBox
+                android:id="@+id/checkbox_drugs_yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes" />
+            <CheckBox
+                android:id="@+id/checkbox_drugs_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No" />
+            <CheckBox
+                android:id="@+id/checkbox_drugs_sometimes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sometimes" />
+
+            <!-- Languages -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Languages"
+                android:paddingTop="12dp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipgroup_languages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="false"
+                app:selectionRequired="false">
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="English"
+                    android:checkable="true" />
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="German"
+                    android:checkable="true" />
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="French"
+                    android:checkable="true" />
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Spanish"
+                    android:checkable="true" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Hobbies -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hobbies"
+                android:paddingTop="12dp" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipgroup_hobbies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="false">
+
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Music"
+                    android:checkable="true" />
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sports"
+                    android:checkable="true" />
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Art"
+                    android:checkable="true" />
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gaming"
+                    android:checkable="true" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Buttons unten mit Constraint Layout damit nicht gescrollt werden muss -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/button_reset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Reset Filters" />
+
+        <Button
+            android:id="@+id/button_apply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="Apply Filters" />
+    </LinearLayout>
+</LinearLayout>
