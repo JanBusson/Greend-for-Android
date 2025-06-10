@@ -2,12 +2,8 @@ package com.example.greendr;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.view.*;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,9 +18,7 @@ public class RegisterFragment extends Fragment {
     private Button registerButton, backButton;
     private FirebaseAuth mAuth;
 
-    public RegisterFragment() {
-        // Leerer Konstruktor
-    }
+    public RegisterFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +39,6 @@ public class RegisterFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         registerButton.setOnClickListener(v -> registerUser());
-
         backButton.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).openFragment(new LoginFragment());
@@ -71,14 +64,12 @@ public class RegisterFragment extends Fragment {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(getContext(), "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show();
                         if (getActivity() instanceof MainActivity) {
-                            ((MainActivity) getActivity()).openFragment(new LoginFragment());
+                            ((MainActivity) getActivity()).openFragment(new GeneralInfoFragment1());
                         }
                     } else {
-                        Toast.makeText(getContext(), "Registrierung fehlgeschlagen: " +
-                                task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Registrierung fehlgeschlagen: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
