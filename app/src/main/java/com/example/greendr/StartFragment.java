@@ -37,9 +37,9 @@ public class StartFragment extends Fragment {
         });
 
         registerBtn.setOnClickListener(v -> {
-//            if (getActivity() instanceof MainActivity) {
-//                ((MainActivity) getActivity()).openFragment(new RegisterFragment());
-//            }
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openFragment(new RegisterFragment());
+            }
         });
 
         helpBtn.setOnClickListener(v -> {
