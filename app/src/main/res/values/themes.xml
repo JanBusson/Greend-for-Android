@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- Theme muss auf MaterialComponents basieren damit Komponenten wie RangeSlider oder
+    Chip Group möglich sind
+    AppCompat Elemente sind aber mit Material kompatibek-->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
     </style>
 </resources>
