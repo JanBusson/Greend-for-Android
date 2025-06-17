@@ -27,33 +27,42 @@ public class WelcomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
 
         Button matchBtn = view.findViewById(R.id.button_find_match);
         Button filterBtn = view.findViewById(R.id.button_filter);
-        Button likesBtn = view.findViewById(R.id.button_liked);
-        Button chatBtn = view.findViewById(R.id.button_chat);
+        Button mymatchesBtn = view.findViewById(R.id.button_liked);
+
+//        Wird bei den Matches angezeigt
+//        Button chatBtn = view.findViewById(R.id.button_chat);
         Button logoutBtn = view.findViewById(R.id.button_logout);
 
         matchBtn.setOnClickListener(v -> {
             // TODO: MatchActivity starten
-            Log.d("WelcomeFragment", "Match finden geklickt");
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openFragment(new FindMatchFragment());
+            }
         });
 
+        //TODO: Filter durchgehen und schauen dass alle Elemente "Sinnvolll sind
         filterBtn.setOnClickListener(v -> {
-            // TODO: MatchActivity starten
-            Log.d("WelcomeFragment", "Filter festlegen geklickt");
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openFragment(new FiltersFragment());
+            }
         });
 
-        likesBtn.setOnClickListener(v -> {
-            // TODO: MatchActivity starten
-            Log.d("WelcomeFragment", "LikedUsers geklickt");
+        mymatchesBtn.setOnClickListener(v -> {
+//            if (getActivity() instanceof MainActivity) {
+//                ((MainActivity) getActivity()).openFragment(new MyMatchesFragment());
+//            }
         });
 
-        chatBtn.setOnClickListener(v -> {
-            // TODO: ChatActivity starten
-            Log.d("WelcomeFragment", "Chatten geklickt");
-        });
+//        siehe oben
+//        chatBtn.setOnClickListener(v -> {
+//            // TODO: ChatActivity starten
+//            Log.d("WelcomeFragment", "Chatten geklickt");
+//        });
 
         //Ausloggen
         logoutBtn.setOnClickListener(v -> {
