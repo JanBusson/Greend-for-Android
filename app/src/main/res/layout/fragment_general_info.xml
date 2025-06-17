@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Name -->
+        <EditText
+            android:id="@+id/input_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Profile Image -->
+        <ImageView
+            android:id="@+id/image_profile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_camera"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/darker_gray" />
+
+        <!-- Gender -->
+        <RadioGroup
+            android:id="@+id/radio_group_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+
+            <RadioButton
+                android:id="@+id/radio_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male" />
+
+            <RadioButton
+                android:id="@+id/radio_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:layout_marginStart="16dp" />
+
+            <RadioButton
+                android:id="@+id/radio_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other"
+                android:layout_marginStart="16dp" />
+        </RadioGroup>
+
+        <!-- Sexuality -->
+        <RadioGroup
+            android:id="@+id/radio_group_sexuality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp">
+
+            <RadioButton
+                android:id="@+id/radio_heterosexual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Heterosexual" />
+
+            <RadioButton
+                android:id="@+id/radio_homosexual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Homosexual" />
+
+            <RadioButton
+                android:id="@+id/radio_bisexual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bisexual" />
+
+            <RadioButton
+                android:id="@+id/radio_other_sexuality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other" />
+        </RadioGroup>
+
+        <!-- Languages -->
+        <CheckBox
+            android:id="@+id/checkbox_english"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="English" />
+
+        <CheckBox
+            android:id="@+id/checkbox_spanish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Spanish" />
+
+        <CheckBox
+            android:id="@+id/checkbox_french"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="French" />
+
+        <CheckBox
+            android:id="@+id/checkbox_german"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="German"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Home Town, Workplace, Job Title, University -->
+        <EditText
+            android:id="@+id/input_home_town"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Home Town"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/input_workplace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Workplace"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/input_job_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Job Title"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/input_university"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="University"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Bio -->
+        <EditText
+            android:id="@+id/input_bio"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="top"
+            android:hint="Bio"
+            android:inputType="textMultiLine"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/button_finish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Finish" />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -66,7 +66,7 @@ public class RegisterFragment extends Fragment {
                     if (task.isSuccessful()) {
                         Toast.makeText(getContext(), "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show();
                         if (getActivity() instanceof MainActivity) {
-                            ((MainActivity) getActivity()).openFragment(new GeneralInfoFragment1());
+                            ((MainActivity) getActivity()).openFragment(new GeneralInfoFragment());
                         }
                     } else {
                         Toast.makeText(getContext(), "Registrierung fehlgeschlagen: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
