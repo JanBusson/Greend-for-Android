@@ -15,15 +15,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GeneralInfoFragment extends Fragment {
+
+    private FirebaseUser user;
+    private DatabaseReference userRef;
 
     private EditText inputName, inputHomeTown, inputWorkplace, inputJobTitle, inputUniversity, inputBio;
     private RadioGroup radioGroupGender, radioGroupSexuality;
     private CheckBox checkboxEnglish, checkboxSpanish, checkboxFrench, checkboxGerman;
     private Button buttonFinish;
-
-    private DatabaseReference databaseReference;
-    private FirebaseUser currentUser;
 
     @Nullable
     @Override
@@ -35,8 +38,10 @@ public class GeneralInfoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userRef = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        }
 
         inputName = view.findViewById(R.id.input_name);
         inputHomeTown = view.findViewById(R.id.input_home_town);
@@ -55,29 +60,34 @@ public class GeneralInfoFragment extends Fragment {
 
         buttonFinish = view.findViewById(R.id.button_finish);
 
-        buttonFinish.setOnClickListener(v -> saveData());
+        buttonFinish.setOnClickListener(v -> saveToFirebase());
     }
 
-    private void saveData() {
-        String name = inputName.getText().toString();
-        String homeTown = inputHomeTown.getText().toString();
-        String workplace = inputWorkplace.getText().toString();
-        String jobTitle = inputJobTitle.getText().toString();
-        String university = inputUniversity.getText().toString();
-        String bio = inputBio.getText().toString();
-
-        String gender = "";
-        int selectedGenderId = radioGroupGender.getCheckedRadioButtonId();
-        if (selectedGenderId != -1) {
-            RadioButton selectedGender = getView().findViewById(selectedGenderId);
-            gender = selectedGender.getText().toString();
+    private void saveToFirebase() {
+        if (userRef == null) {
+            Toast.makeText(getContext(), "Kein Benutzer eingeloggt", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        String sexuality = "";
-        int selectedSexualityId = radioGroupSexuality.getCheckedRadioButtonId();
-        if (selectedSexualityId != -1) {
-            RadioButton selectedSexuality = getView().findViewById(selectedSexualityId);
-            sexuality = selectedSexuality.getText().toString();
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("name", inputName.getText().toString());
+        data.put("homeTown", inputHomeTown.getText().toString());
+        data.put("workplace", inputWorkplace.getText().toString());
+        data.put("jobTitle", inputJobTitle.getText().toString());
+        data.put("university", inputUniversity.getText().toString());
+        data.put("bio", inputBio.getText().toString());
+
+        int genderId = radioGroupGender.getCheckedRadioButtonId();
+        if (genderId != -1) {
+            RadioButton selectedGender = getView().findViewById(genderId);
+            data.put("gender", selectedGender.getText().toString());
+        }
+
+        int sexualityId = radioGroupSexuality.getCheckedRadioButtonId();
+        if (sexualityId != -1) {
+            RadioButton selectedSexuality = getView().findViewById(sexualityId);
+            data.put("sexuality", selectedSexuality.getText().toString());
         }
 
         StringBuilder languages = new StringBuilder();
@@ -85,39 +95,17 @@ public class GeneralInfoFragment extends Fragment {
         if (checkboxSpanish.isChecked()) languages.append("Spanish,");
         if (checkboxFrench.isChecked()) languages.append("French,");
         if (checkboxGerman.isChecked()) languages.append("German,");
+        data.put("languages", languages.toString());
 
-        User user = new User(name, gender, sexuality, languages.toString(), homeTown, workplace, jobTitle, university, bio);
-
-        if (currentUser != null) {
-            databaseReference.child(currentUser.getUid()).setValue(user).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(getContext(), "Data saved successfully", Toast.LENGTH_SHORT).show();
+        userRef.updateChildren(data)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(getContext(), "Information gespeichert", Toast.LENGTH_SHORT).show();
                     if (getActivity() instanceof MainActivity) {
                         ((MainActivity) getActivity()).openFragment(new EcoTestFragment());
                     }
-                } else {
-                    Toast.makeText(getContext(), "Failed to save data", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    public static class User {
-        public String name, gender, sexuality, languages, homeTown, workplace, jobTitle, university, bio;
-
-        public User() {}
-
-        public User(String name, String gender, String sexuality, String languages,
-                    String homeTown, String workplace, String jobTitle, String university, String bio) {
-            this.name = name;
-            this.gender = gender;
-            this.sexuality = sexuality;
-            this.languages = languages;
-            this.homeTown = homeTown;
-            this.workplace = workplace;
-            this.jobTitle = jobTitle;
-            this.university = university;
-            this.bio = bio;
-        }
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Fehler beim Speichern: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                );
     }
 }
