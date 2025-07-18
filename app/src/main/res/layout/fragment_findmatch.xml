@@ -5,17 +5,73 @@
     android:padding="24dp"
     android:gravity="center">
 
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name:" />
+
+    <TextView
+        android:id="@+id/text_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gender:" />
+
+    <TextView
+        android:id="@+id/text_hometown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hometown:" />
+
+    <TextView
+        android:id="@+id/text_job_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Job Title:" />
+
+    <TextView
+        android:id="@+id/text_university"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="University:" />
+
+    <TextView
+        android:id="@+id/text_languages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Languages:" />
+
+    <TextView
+        android:id="@+id/text_sexuality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sexuality:" />
+
+    <TextView
+        android:id="@+id/text_workplace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Workplace:" />
+
+    <TextView
+        android:id="@+id/text_bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bio:" />
+
+    <!-- Match Buttons -->
     <Button
         android:id="@+id/button_like"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_like" />
+        android:text="@string/button_like"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/button_reject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_reject" />
+        android:text="@string/button_reject"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>
-
