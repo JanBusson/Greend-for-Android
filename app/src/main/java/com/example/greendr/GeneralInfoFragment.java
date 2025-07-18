@@ -1,5 +1,8 @@
 package com.example.greendr;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +23,17 @@ import java.util.Map;
 
 public class GeneralInfoFragment extends Fragment {
 
+    private static final int PICK_IMAGE_REQUEST = 1;
+
     private FirebaseUser user;
     private DatabaseReference userRef;
 
-    private EditText inputName, inputHomeTown, inputWorkplace, inputJobTitle, inputUniversity, inputBio;
+    private EditText inputName, inputAge, inputHomeTown, inputWorkplace, inputJobTitle, inputUniversity, inputBio;
     private RadioGroup radioGroupGender, radioGroupSexuality;
     private CheckBox checkboxEnglish, checkboxSpanish, checkboxFrench, checkboxGerman;
     private Button buttonFinish;
+    private ImageView imageProfile;
+    private Uri imageUri;
 
     @Nullable
     @Override
@@ -44,6 +51,7 @@ public class GeneralInfoFragment extends Fragment {
         }
 
         inputName = view.findViewById(R.id.input_name);
+        inputAge = view.findViewById(R.id.input_age);
         inputHomeTown = view.findViewById(R.id.input_home_town);
         inputWorkplace = view.findViewById(R.id.input_workplace);
         inputJobTitle = view.findViewById(R.id.input_job_title);
@@ -59,11 +67,36 @@ public class GeneralInfoFragment extends Fragment {
         checkboxGerman = view.findViewById(R.id.checkbox_german);
 
         buttonFinish = view.findViewById(R.id.button_finish);
+        imageProfile = view.findViewById(R.id.image_profile);
 
-        buttonFinish.setOnClickListener(v -> saveToFirebase());
+        imageProfile.setOnClickListener(v -> openImagePicker());
+
+        buttonFinish.setOnClickListener(v -> {
+            if (imageUri != null) {
+                saveToFirebase(imageUri.toString());
+            } else {
+                Toast.makeText(getContext(), "Bitte ein Profilbild auswählen", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void saveToFirebase() {
+    private void openImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Profilbild auswählen"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            imageProfile.setImageURI(imageUri);
+        }
+    }
+
+    private void saveToFirebase(String imagePath) {
         if (userRef == null) {
             Toast.makeText(getContext(), "Kein Benutzer eingeloggt", Toast.LENGTH_SHORT).show();
             return;
@@ -72,6 +105,8 @@ public class GeneralInfoFragment extends Fragment {
         Map<String, Object> data = new HashMap<>();
 
         data.put("name", inputName.getText().toString());
+        data.put("age", inputAge.getText().toString());
+        data.put("profileImageUri", imagePath);
         data.put("homeTown", inputHomeTown.getText().toString());
         data.put("workplace", inputWorkplace.getText().toString());
         data.put("jobTitle", inputJobTitle.getText().toString());

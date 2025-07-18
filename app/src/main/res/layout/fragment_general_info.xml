@@ -7,7 +7,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Profile Image -->
+        <ImageView
+            android:id="@+id/image_profile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_camera"
+            android:background="@android:color/darker_gray" />
 
         <!-- Name -->
         <EditText
@@ -15,6 +26,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Age -->
+        <EditText
+            android:id="@+id/input_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Age"
+            android:inputType="number"
             android:layout_marginBottom="16dp" />
 
         <!-- Gender -->
@@ -144,6 +164,7 @@
             android:inputType="textMultiLine"
             android:layout_marginBottom="24dp" />
 
+        <!-- Submit -->
         <Button
             android:id="@+id/button_finish"
             android:layout_width="match_parent"
