@@ -12,12 +12,12 @@ public class User {
     public String sexuality;
     public String workplace;
     public String bio;
+    public String userId;
 
-    public User() {} // Firebase braucht einen leeren Konstruktor
-
+    public User() {} // lerrer Konstruktor <- Firebase
     public User(String name, String gender, String homeTown, String jobTitle,
                 String university, String languages, String sexuality,
-                String workplace, String bio) {
+                String workplace, String bio, String userId) {
         this.name = name;
         this.gender = gender;
         this.homeTown = homeTown;
@@ -27,5 +27,6 @@ public class User {
         this.sexuality = sexuality;
         this.workplace = workplace;
         this.bio = bio;
+        this.userId=userId;
     }
 }
