@@ -19,4 +19,16 @@
     <string name="message_loginError">"Login fehlgeschlagen: "</string>
     <string name="message_loginSuccess">Login erfolgreich!</string>
     <string name="promt_confirm_password">confirm password</string>
+
+    <!-- Hier wird %1$s genutzt um Platzhalter in einer Zeichenkette zu erlauben.
+        In diesem Fall hilft das dabei die Daten aus der Datenbank richtig dar zu stellen-->
+    <string name="label_name">Name: %1$s</string>
+    <string name="label_gender">Gender: %1$s</string>
+    <string name="label_hometown">Hometown: %1$s</string>
+    <string name="label_job_title">Job Title: %1$s</string>
+    <string name="label_university">University: %1$s</string>
+    <string name="label_languages">Languages: %1$s</string>
+    <string name="label_sexuality">Sexuality: %1$s</string>
+    <string name="label_workplace">Workplace: %1$s</string>
+    <string name="label_bio">Bio: %1$s</string>
 </resources>

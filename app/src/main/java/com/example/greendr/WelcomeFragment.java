@@ -39,7 +39,7 @@ public class WelcomeFragment extends Fragment {
         Button logoutBtn = view.findViewById(R.id.button_logout);
 
         matchBtn.setOnClickListener(v -> {
-            // TODO: MatchActivity starten
+            // TODO: MatchActivity coden
             if (getActivity() instanceof MainActivity) {
                 ((MainActivity) getActivity()).openFragment(new FindMatchFragment());
             }
