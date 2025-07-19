@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -60,12 +61,18 @@ public class FindMatchFragment extends Fragment {
 
         //Klären was passiert
         likeButton.setOnClickListener(v -> {
-            // TODO: Like-Logik
+            if (currentUser != null && !userList.isEmpty()) {
+                User swipedUser = userList.get(currentIndex);
+                saveSwipe(swipedUser.userId, "like");
+            }
             showNextUser();
         });
 
         rejectButton.setOnClickListener(v ->{
-            // TODO: Dislike-Logik
+            if (currentUser != null && !userList.isEmpty()) {
+                User swipedUser = userList.get(currentIndex);
+                saveSwipe(swipedUser.userId, "dislike");
+            }
             showNextUser();
         });
 
@@ -85,7 +92,7 @@ public class FindMatchFragment extends Fragment {
                 for (DataSnapshot userSnap : snapshot.getChildren()) {
                     try {
                         Object value = userSnap.getValue();
-                        //Dieser Abschnitt prüft dass es sich beim User um ein Objekt handelt und nicht nur z.B. um einen String
+                        //Dieser Abschnitt prüft dass es sich beim User um ein HashMap handelt und nicht nur z.B. um einen String
                         if (value instanceof java.util.Map) {
                             User user = userSnap.getValue(User.class);
                             if (user != null) {
@@ -108,10 +115,11 @@ public class FindMatchFragment extends Fragment {
         });
     }
 
-
+    //deint dazu die Daten des gezogenen Nuters auszulesen
     private void showNextUser() {
         if (userList.size() == 0) return;
 
+        //zum Testen wird ein zufälliger Nutzer genommen
         currentIndex = (currentIndex + 1) % userList.size();
         User user = userList.get(currentIndex);
 
@@ -125,6 +133,25 @@ public class FindMatchFragment extends Fragment {
         sexualityText.setText(getString(R.string.label_sexuality, user.sexuality));
         workplaceText.setText(getString(R.string.label_workplace, user.workplace));
         bioText.setText(getString(R.string.label_bio, user.bio));
+    }
+
+    private void saveSwipe(String swipedUserId, String swipeType) {
+        if (currentUser == null || swipedUserId == null || swipeType == null) return;
+
+        DatabaseReference swipeRef = FirebaseDatabase.getInstance()
+                .getReference("Users")
+                .child(currentUser.getUid())
+                .child("swipes")
+                .child(swipedUserId);
+
+        // Werte vorbereiten
+        HashMap<String, Object> swipeData = new HashMap<>();
+        swipeData.put("swipeType", swipeType);
+        swipeData.put("timestamp", System.currentTimeMillis() / 1000); // Unix-Zeit
+
+        swipeRef.setValue(swipeData)
+                .addOnSuccessListener(aVoid -> Log.d("Swipe", "Swipe gespeichert: " + swipeType))
+                .addOnFailureListener(e -> Log.e("Swipe", "Fehler beim Speichern des Swipes", e));
     }
 }
 
