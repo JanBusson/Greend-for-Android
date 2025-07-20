@@ -112,6 +112,7 @@ public class GeneralInfoFragment extends Fragment {
         data.put("jobTitle", inputJobTitle.getText().toString());
         data.put("university", inputUniversity.getText().toString());
         data.put("bio", inputBio.getText().toString());
+        data.put("socialScore", 10); // Default für neuen user
 
         int genderId = radioGroupGender.getCheckedRadioButtonId();
         if (genderId != -1) {
