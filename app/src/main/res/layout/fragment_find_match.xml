@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/match_info_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -7,71 +9,65 @@
 
     <TextView
         android:id="@+id/text_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Name:" />
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/text_gender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Gender:" />
-
-    <TextView
-        android:id="@+id/text_hometown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Hometown:" />
-
-    <TextView
-        android:id="@+id/text_job_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Job Title:" />
+        android:id="@+id/text_age"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/text_university"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="University:" />
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
-        android:id="@+id/text_languages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Languages:" />
+        android:id="@+id/text_job_title"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/text_home_town"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/text_sexuality"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sexuality:" />
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/text_workplace"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Workplace:" />
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp">
 
-    <TextView
-        android:id="@+id/text_bio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Bio:" />
+        <Button
+            android:id="@+id/button_dislike"
+            android:text="Dislike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-    <!-- Match Buttons -->
+        <Button
+            android:id="@+id/button_like"
+            android:text="Like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
     <Button
-        android:id="@+id/button_like"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_like"
-        android:layout_marginTop="16dp" />
-
-    <Button
-        android:id="@+id/button_reject"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_reject"
-        android:layout_marginTop="8dp" />
-
+        android:id="@+id/button_back_to_welcome"
+        android:text="Zurück"
+        android:layout_marginTop="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
