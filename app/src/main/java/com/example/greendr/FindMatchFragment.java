@@ -96,7 +96,7 @@ public class FindMatchFragment extends Fragment {
                 String homeTown = child.child("homeTown").getValue(String.class);
                 String sexuality = child.child("sexuality").getValue(String.class);
 
-                // Alterswert sicher parsen (aus String in Long)
+                // age kommt als String, also konvertieren
                 Long age = null;
                 try {
                     age = Long.parseLong(child.child("age").getValue(String.class));
@@ -164,9 +164,12 @@ public class FindMatchFragment extends Fragment {
             }
         });
 
-        String matchId = userRef.push().getKey();
-        DatabaseReference matchRef = FirebaseDatabase.getInstance().getReference("Matches").child(matchId);
-        matchRef.setValue(new Match(currentUid, target.uid, "like", System.currentTimeMillis()));
+        // Save Match (LIKE) in /Matches
+        String matchId = FirebaseDatabase.getInstance().getReference("Matches").push().getKey();
+        if (matchId != null) {
+            DatabaseReference matchRef = FirebaseDatabase.getInstance().getReference("Matches").child(matchId);
+            matchRef.setValue(new Match(currentUid, target.uid, "like", System.currentTimeMillis()));
+        }
 
         currentIndex++;
         showNext();
@@ -183,9 +186,12 @@ public class FindMatchFragment extends Fragment {
             updateSocialScore(target.uid);
         });
 
-        String matchId = userRef.push().getKey();
-        DatabaseReference matchRef = FirebaseDatabase.getInstance().getReference("Matches").child(matchId);
-        matchRef.setValue(new Match(currentUid, target.uid, "dislike", System.currentTimeMillis()));
+        // Save Match (DISLIKE) in /Matches
+        String matchId = FirebaseDatabase.getInstance().getReference("Matches").push().getKey();
+        if (matchId != null) {
+            DatabaseReference matchRef = FirebaseDatabase.getInstance().getReference("Matches").child(matchId);
+            matchRef.setValue(new Match(currentUid, target.uid, "dislike", System.currentTimeMillis()));
+        }
 
         currentIndex++;
         showNext();
