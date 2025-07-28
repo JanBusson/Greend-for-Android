@@ -113,18 +113,58 @@ public class ChatFragment extends Fragment {
     }
 
     private void sendMessage() {
-        String text = inputMessage.getText().toString().trim();
-        if (TextUtils.isEmpty(text)) return;
-
-        Message msg = new Message(currentUid, text, System.currentTimeMillis());
-        chatRef.child("chatlog").push().setValue(msg)
-                .addOnSuccessListener(aVoid -> {
-                    inputMessage.setText("");
-                    addMessageToUI(msg);
-                    chatScroll.post(() -> chatScroll.fullScroll(View.FOCUS_DOWN));
-                })
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to send!", Toast.LENGTH_SHORT).show());
+    String text = inputMessage.getText().toString().trim();
+    if (TextUtils.isEmpty(text)) {
+        Toast.makeText(getContext(), "Nachricht ist leer!", Toast.LENGTH_SHORT).show();
+        return;
     }
+
+    if (chatRef == null || matchUid == null || chatId == null) {
+        Toast.makeText(getContext(), 
+            "Chat nicht initialisiert!\ncurrentUid=" + currentUid 
+            + "\nmatchUid=" + matchUid 
+            + "\nchatId=" + chatId, 
+            Toast.LENGTH_LONG).show();
+        return;
+    }
+
+    // Debug-Info: vor dem Schreiben
+    Toast.makeText(getContext(),
+            "Sende Nachricht:\nchatId=" + chatId +
+            "\ncurrentUid=" + currentUid +
+            "\nmatchUid=" + matchUid,
+            Toast.LENGTH_LONG).show();
+
+    // HARDCODED WRITE zum Testen
+    chatRef.child("debug_test").setValue("write_test")
+        .addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Exception e = task.getException();
+                Toast.makeText(getContext(), 
+                        "Firebase WRITE fehlgeschlagen:\n" + (e != null ? e.getMessage() : "Unbekannter Fehler"),
+                        Toast.LENGTH_LONG).show();
+                return;
+            } else {
+                Toast.makeText(getContext(), "Firebase WRITE erfolgreich!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    // Nachricht schreiben
+    Message msg = new Message(currentUid, text, System.currentTimeMillis());
+    chatRef.child("chatlog").push().setValue(msg)
+            .addOnSuccessListener(aVoid -> {
+                Toast.makeText(getContext(), "Nachricht erfolgreich gesendet!", Toast.LENGTH_SHORT).show();
+                inputMessage.setText("");
+                addMessageToUI(msg);
+                chatScroll.post(() -> chatScroll.fullScroll(View.FOCUS_DOWN));
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(getContext(), 
+                        "Failed to send:\n" + (e != null ? e.getMessage() : "Unbekannter Fehler"),
+                        Toast.LENGTH_LONG).show();
+            });
+}
+
 
     private void addMessageToUI(Message msg) {
         TextView msgView = new TextView(getContext());
