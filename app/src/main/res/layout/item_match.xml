@@ -23,10 +23,26 @@
         android:textSize="16sp"
         android:layout_marginTop="4dp" />
 
-    <Button
-        android:id="@+id/button_remove_match"
-        android:layout_width="wrap_content"
+    <!-- Buttons nebeneinander -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Match entfernen"
-        android:layout_marginTop="8dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/button_chat"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Zum Chat" />
+
+        <Button
+            android:id="@+id/button_remove_match"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Match entfernen"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
 </LinearLayout>

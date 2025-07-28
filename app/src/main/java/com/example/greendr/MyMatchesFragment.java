@@ -95,6 +95,7 @@ public class MyMatchesFragment extends Fragment {
 
         TextView nameText = matchView.findViewById(R.id.text_match_name);
         TextView detailsText = matchView.findViewById(R.id.text_match_details);
+        Button chatButton = matchView.findViewById(R.id.button_chat);       // NEU
         Button removeButton = matchView.findViewById(R.id.button_remove_match);
 
         nameText.setText(match.name != null ? match.name : "Unbekannt");
@@ -102,6 +103,18 @@ public class MyMatchesFragment extends Fragment {
                 "\nUni: " + (match.university != null ? match.university : "N/A") +
                 "\nJob: " + (match.jobTitle != null ? match.jobTitle : "N/A"));
 
+        // ✅ Zum Chat-Button
+        chatButton.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("matchUid", match.uid);
+            ChatFragment chatFragment = new ChatFragment();
+            chatFragment.setArguments(bundle);
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openFragment(chatFragment);
+            }
+        });
+
+        // ❌ Match entfernen
         removeButton.setOnClickListener(v -> {
             userRef.child(currentUid).child("matches").child(match.uid).removeValue();
             matchesContainer.removeView(matchView);
@@ -110,6 +123,7 @@ public class MyMatchesFragment extends Fragment {
 
         matchesContainer.addView(matchView);
     }
+
 
     public static class MatchUser {
         public String uid;
