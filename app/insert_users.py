@@ -1,13 +1,19 @@
+import os
+import random
 import firebase_admin
 from firebase_admin import credentials, db
 
-# 1. Service Account Key laden
-cred = credentials.Certificate("serviceAccountKey.json")
+# Basisverzeichnis automatisch berechnen (wo das Skript liegt)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+cred_path = os.path.join(BASE_DIR, "serviceAccountKey.json")
+
+# Firebase initialisieren
+cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://greendr-5ab65-default-rtdb.firebaseio.com/'
+    'databaseURL': 'https://greendr-5ab65-default-rtdb.europe-west1.firebasedatabase.app/'
 })
 
-# 2. Liste mit bestehenden User-UIDs
+# 1. Bestehende User-UIDs
 uids = [
     "NrbGA8NPWJbgxY5iujSOeqaDa6h1",
     "QAgH1AMduKODnGg11sKRcz47avz2",
@@ -21,30 +27,37 @@ uids = [
     "xgWexXlTrLc1urb7j3d8zOAbatF3"
 ]
 
-# 3. Dummy-Daten
-dummy_data = {
-    "name": "Test User",
-    "age": 25,
-    "gender": "Other",
-    "hometown": "Sample City",
-    "ecoScore": 50.0,
-    "socialScore": 50.0,
-    "university": "Sample University",
-    "jobTitle": "Sample Job",
-    "languages": ["English", "German"],
-    "sexuality": "Unknown",
-    "bio": "This is a dummy bio."
-}
+# Zufallslisten
+names = ["Alex", "Sam", "Jamie", "Taylor", "Chris", "Jordan", "Casey", "Riley", "Morgan", "Avery"]
+genders = ["Male", "Female", "Other"]
+cities = ["Berlin", "Munich", "Hamburg", "Cologne", "Frankfurt"]
+sexualities = ["Heterosexual", "Homosexual", "Bisexual", "Asexual", "Unknown"]
+universities = ["HWR Berlin", "TU Munich", "Uni Hamburg", "Uni Cologne", "Goethe Uni Frankfurt"]
+jobs = ["Software Engineer", "Data Analyst", "Consultant", "Researcher", "Student Assistant"]
+languages_pool = ["German", "English", "Spanish", "French", "Japanese"]
+hobbies = ["Reading", "Sports", "Gaming", "Music", "Traveling"]
 
-# 4. Felder ergänzen/überschreiben
+# 2. Zufallsdaten generieren und in Firebase schreiben
 for uid in uids:
-    user_ref = db.reference(f"users/{uid}")
-    current_data = user_ref.get() or {}
+    user_data = {
+        "name": random.choice(names),
+        "age": random.randint(18, 30),
+        "gender": random.choice(genders),
+        "hometown": random.choice(cities),
+        "ecoScore": round(random.uniform(0, 100), 1),
+        "socialScore": round(random.uniform(0, 100), 1),
+        "university": random.choice(universities),
+        "jobTitle": random.choice(jobs),
+        "languages": random.sample(languages_pool, k=random.randint(1, 3)),
+        "sexuality": random.choice(sexualities),
+        "bio": "I love " + random.choice(hobbies) + " and meeting new people!",
+        "usageOfDrugs": random.choice(["Never", "Occasionally", "Frequently"]),
+        "hobbies": random.sample(hobbies, k=random.randint(1, 3))
+    }
 
-    # Nur fehlende Felder ergänzen
-    updated_data = {**dummy_data, **current_data}  # vorhandene Felder behalten Vorrang
-    user_ref.set(updated_data)
+    user_ref = db.reference(f"Users/{uid}")
+    user_ref.set(user_data)  # Überschreibt vorhandene Daten komplett
 
-    print(f"✅ User {uid} aktualisiert: Fehlende Felder ergänzt.")
+    print(f"✅ User {uid} überschrieben mit neuen Daten: {user_data['name']}")
 
-print("🎉 Alle User wurden erfolgreich befüllt/ergänzt!")
+print("🎉 Alle User wurden mit neuen, realistischen Daten überschrieben!")
