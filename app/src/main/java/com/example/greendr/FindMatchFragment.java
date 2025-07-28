@@ -81,6 +81,12 @@ public class FindMatchFragment extends Fragment {
             Double myEco = me.child("ecoScore").getValue(Double.class);
             Double mySocial = me.child("socialScore").getValue(Double.class);
 
+            if (myEco == null || mySocial == null) {
+                Toast.makeText(getContext(), "Bitte vervollständige dein Profil zuerst!", Toast.LENGTH_SHORT).show();
+                return; // verhindert Crash
+            }
+
+
             candidates.clear();
 
             for (DataSnapshot child : snapshot.getChildren()) {
