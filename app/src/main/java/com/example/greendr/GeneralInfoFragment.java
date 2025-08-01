@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,9 +75,9 @@ public class GeneralInfoFragment extends Fragment {
 
         buttonFinish.setOnClickListener(v -> {
             if (imageUri != null) {
-                saveToFirebase(imageUri.toString());
+                uploadImageAndSaveData();
             } else {
-                Toast.makeText(getContext(), "Bitte ein Profilbild auswählen", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Please select a profile picture", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -84,7 +86,7 @@ public class GeneralInfoFragment extends Fragment {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Profilbild auswählen"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select profile picture"), PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -96,23 +98,46 @@ public class GeneralInfoFragment extends Fragment {
         }
     }
 
-    private void saveToFirebase(String imagePath) {
-        if (userRef == null) {
-            Toast.makeText(getContext(), "Kein Benutzer eingeloggt", Toast.LENGTH_SHORT).show();
+    private void uploadImageAndSaveData() {
+        
+        if (imageUri == null) {
+            Toast.makeText(getContext(), "No image selected!", Toast.LENGTH_SHORT).show();
             return;
         }
+        
+        if (user == null || userRef == null) {
+            Toast.makeText(getContext(), "No user logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
 
+        StorageReference storageRef = FirebaseStorage.getInstance()
+                .getReference("profile_images/" + user.getUid() + ".jpg");
+        Toast.makeText(getContext(), "Uploading: " + imageUri.toString(), Toast.LENGTH_SHORT).show();
+
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot ->
+                        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                            saveToFirebase(uri.toString());
+                        })
+                )
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Image upload failed: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                );
+    }
+
+    private void saveToFirebase(String imageUrl) {
         Map<String, Object> data = new HashMap<>();
 
         data.put("name", inputName.getText().toString());
         data.put("age", inputAge.getText().toString());
-        data.put("profileImageUri", imagePath);
+        data.put("profileImageUrl", imageUrl); // Firebase Storage download URL
         data.put("homeTown", inputHomeTown.getText().toString());
         data.put("workplace", inputWorkplace.getText().toString());
         data.put("jobTitle", inputJobTitle.getText().toString());
         data.put("university", inputUniversity.getText().toString());
         data.put("bio", inputBio.getText().toString());
-        data.put("socialScore", 10); // Default für neuen user
+        data.put("socialScore", 10); // Default score
 
         int genderId = radioGroupGender.getCheckedRadioButtonId();
         if (genderId != -1) {
@@ -135,13 +160,13 @@ public class GeneralInfoFragment extends Fragment {
 
         userRef.updateChildren(data)
                 .addOnSuccessListener(unused -> {
-                    Toast.makeText(getContext(), "Information gespeichert", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Information saved", Toast.LENGTH_SHORT).show();
                     if (getActivity() instanceof MainActivity) {
                         ((MainActivity) getActivity()).openFragment(new EcoTestFragment());
                     }
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "Fehler beim Speichern: " + e.getMessage(), Toast.LENGTH_LONG).show()
+                        Toast.makeText(getContext(), "Failed to save information: " + e.getMessage(), Toast.LENGTH_LONG).show()
                 );
     }
 }
