@@ -1,5 +1,6 @@
 package com.example.greendr;
 
+import android.util.Log;
 import android.app.AlertDialog;
 import android.widget.EditText;
 import java.util.HashMap;
@@ -119,44 +120,76 @@ public class FindMatchFragment extends Fragment {
     }
 
     private void loadCandidates() {
-        userRef.get().addOnSuccessListener(snapshot -> {
-            DataSnapshot me = snapshot.child(currentUid);
-            Double myEco = me.child("ecoScore").getValue(Double.class);
-            Double mySocial = me.child("socialScore").getValue(Double.class);
+    userRef.get().addOnSuccessListener(snapshot -> {
+        DataSnapshot me = snapshot.child(currentUid);
+        Double myEco = me.child("ecoScore").getValue(Double.class);
+        Double mySocial = me.child("socialScore").getValue(Double.class);
 
-            if (myEco == null || mySocial == null) {
-                Toast.makeText(getContext(), "Bitte vervollständige dein Profil zuerst!", Toast.LENGTH_SHORT).show();
-                return;
+        Log.d("DEBUG", "Current UID: " + currentUid);
+        Log.d("DEBUG", "My ecoScore: " + myEco + " | My socialScore: " + mySocial);
+
+        if (myEco == null || mySocial == null) {
+            Toast.makeText(getContext(), "Complete your profile first!", Toast.LENGTH_SHORT).show();
+            Log.w("DEBUG", "Aborting: ecoScore or socialScore is missing for current user.");
+            return;
+        }
+
+        long likesCount = me.child("likes").getChildrenCount();
+        long dislikesCount = me.child("disliked").getChildrenCount();
+        Log.d("DEBUG", "Current user likes count: " + likesCount + " | dislikes count: " + dislikesCount);
+
+        candidates.clear();
+
+        for (DataSnapshot child : snapshot.getChildren()) {
+            String uid = child.getKey();
+            if (uid.equals(currentUid)) {
+                Log.d("DEBUG", "Skipping self: " + uid);
+                continue;
             }
 
-            candidates.clear();
+            boolean liked = me.child("likes").exists() && me.child("likes").hasChild(uid);
+            boolean disliked = me.child("disliked").exists() && me.child("disliked").hasChild(uid);
 
-            for (DataSnapshot child : snapshot.getChildren()) {
-                String uid = child.getKey();
-                if (uid.equals(currentUid)) continue;
-                if (me.child("likes").hasChild(uid) || me.child("disliked").hasChild(uid)) continue;
+            Log.d("DEBUG", "Checking candidate: " + uid + " | liked=" + liked + " | disliked=" + disliked);
 
-                Double eco = child.child("ecoScore").getValue(Double.class);
-                Double social = child.child("socialScore").getValue(Double.class);
-                String name = child.child("name").getValue(String.class);
-                String university = child.child("university").getValue(String.class);
-                String jobTitle = child.child("jobTitle").getValue(String.class);
-                String homeTown = child.child("homeTown").getValue(String.class);
-                String sexuality = child.child("sexuality").getValue(String.class);
-
-                Long age = null;
-                try { age = Long.parseLong(child.child("age").getValue(String.class)); } catch (Exception ignored) {}
-
-                if (eco == null || social == null || name == null || age == null) continue;
-
-                double matchScore = 0.6 * Math.abs(myEco - eco) + 0.4 * Math.abs(mySocial - social);
-                candidates.add(new MatchUser(uid, name, university, jobTitle, homeTown, sexuality, age, matchScore));
+            if (liked || disliked) {
+                Log.d("DEBUG", "Skipping candidate due to like/dislike: " + uid);
+                continue;
             }
 
-            Collections.sort(candidates, (a, b) -> Double.compare(a.score, b.score));
-            showNext();
-        });
-    }
+            // Retrieve candidate data
+            Double eco = child.child("ecoScore").getValue(Double.class);
+            Double social = child.child("socialScore").getValue(Double.class);
+            String name = child.child("name").getValue(String.class);
+
+            // Age: handle both Long and String
+            Long age = null;
+            if (child.child("age").getValue() instanceof Long) {
+                age = child.child("age").getValue(Long.class);
+            } else if (child.child("age").getValue() instanceof String) {
+                try { age = Long.parseLong(child.child("age").getValue(String.class)); }
+                catch (Exception e) { Log.w("DEBUG", "Invalid age format for UID: " + uid); }
+            }
+
+            Log.d("DEBUG", "Candidate data: eco=" + eco + ", social=" + social + ", name=" + name + ", age=" + age);
+
+            // Skip incomplete profiles
+            if (eco == null || social == null || name == null || age == null) {
+                Log.d("DEBUG", "Skipping incomplete profile: " + uid);
+                continue;
+            }
+
+            // Calculate match score
+            double matchScore = 0.6 * Math.abs(myEco - eco) + 0.4 * Math.abs(mySocial - social);
+            candidates.add(new MatchUser(uid, name, null, null, null, null, age, matchScore));
+            Log.d("DEBUG", "Candidate added: " + uid + " | matchScore=" + matchScore);
+        }
+
+        Log.d("DEBUG", "Total candidates loaded: " + candidates.size());
+        
+        Collections.sort(candidates, (a, b) -> Double.compare(a.score, b.score));
+        showNext();
+    });}
 
     private void showNext() {
         if (currentIndex < candidates.size()) {
