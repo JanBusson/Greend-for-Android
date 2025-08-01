@@ -33,10 +33,15 @@ public class WelcomeFragment extends Fragment {
         Button matchBtn = view.findViewById(R.id.button_find_match);
         Button filterBtn = view.findViewById(R.id.button_filter);
         Button mymatchesBtn = view.findViewById(R.id.button_liked);
-
-//        Wird bei den Matches angezeigt
-//        Button chatBtn = view.findViewById(R.id.button_chat);
         Button logoutBtn = view.findViewById(R.id.button_logout);
+        Button commentsBtn = view.findViewById(R.id.button_comments);
+
+        commentsBtn.setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).openFragment(new CommentsFragment());
+            }
+        });
+
 
         matchBtn.setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
@@ -56,12 +61,6 @@ public class WelcomeFragment extends Fragment {
                 ((MainActivity) getActivity()).openFragment(new MyMatchesFragment());
             }
         });
-
-//        siehe oben
-//        chatBtn.setOnClickListener(v -> {
-//            // TODO: ChatActivity starten
-//            Log.d("WelcomeFragment", "Chatten geklickt");
-//        });
 
         //Ausloggen
         logoutBtn.setOnClickListener(v -> {
