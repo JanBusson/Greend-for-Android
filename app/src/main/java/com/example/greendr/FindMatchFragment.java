@@ -1,5 +1,9 @@
 package com.example.greendr;
 
+import android.app.AlertDialog;
+import android.widget.EditText;
+import java.util.HashMap;
+import java.util.Map;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,18 +28,12 @@ import java.util.List;
 
 public class FindMatchFragment extends Fragment {
 
-    private TextView nameTextView;
-    private TextView universityTextView;
-    private TextView jobTitleTextView;
-    private TextView hometownTextView;
-    private TextView sexualityTextView;
-    private TextView ageTextView;
-    private Button likeButton, dislikeButton, backButton;
-
+    private TextView nameTextView, universityTextView, jobTitleTextView, hometownTextView, sexualityTextView, ageTextView;
+    private Button likeButton, dislikeButton, backButton, commentButton;
+    private MatchUser currentTarget;
     private List<MatchUser> candidates = new ArrayList<>();
     private int currentIndex = 0;
     private String currentUid;
-
     private DatabaseReference userRef;
 
     @Nullable
@@ -58,6 +56,7 @@ public class FindMatchFragment extends Fragment {
         likeButton = view.findViewById(R.id.button_like);
         dislikeButton = view.findViewById(R.id.button_dislike);
         backButton = view.findViewById(R.id.button_back_to_welcome);
+        commentButton = view.findViewById(R.id.button_comment);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
@@ -73,6 +72,50 @@ public class FindMatchFragment extends Fragment {
                 ((MainActivity) getActivity()).openFragment(new WelcomeFragment());
             }
         });
+        commentButton.setOnClickListener(v -> openCommentDialog());
+    }
+
+    private void openCommentDialog() {
+        if (currentTarget == null) {
+            Toast.makeText(getContext(), "Kein aktiver Nutzer für Kommentar!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Add Comment");
+
+        final EditText input = new EditText(getContext());
+        input.setHint("Write your comment...");
+        builder.setView(input);
+
+        builder.setPositiveButton("Post", (dialog, which) -> {
+            String commentText = input.getText().toString().trim();
+            if (commentText.isEmpty()) {
+                Toast.makeText(getContext(), "Comment cannot be empty!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            postComment(currentTarget.uid, commentText);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    private void postComment(String targetUid, String commentText) {
+        DatabaseReference commentRef = userRef.child(targetUid).child("comments").push();
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        Map<String, Object> commentData = new HashMap<>();
+        commentData.put("text", commentText);
+        commentData.put("authorId", currentUid);
+        commentData.put("authorName", currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Unknown");
+        commentData.put("timestamp", System.currentTimeMillis());
+
+        commentRef.setValue(commentData)
+                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Comment posted!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void loadCandidates() {
@@ -83,9 +126,8 @@ public class FindMatchFragment extends Fragment {
 
             if (myEco == null || mySocial == null) {
                 Toast.makeText(getContext(), "Bitte vervollständige dein Profil zuerst!", Toast.LENGTH_SHORT).show();
-                return; // verhindert Crash
+                return;
             }
-
 
             candidates.clear();
 
@@ -102,11 +144,8 @@ public class FindMatchFragment extends Fragment {
                 String homeTown = child.child("homeTown").getValue(String.class);
                 String sexuality = child.child("sexuality").getValue(String.class);
 
-                // age kommt als String, also konvertieren
                 Long age = null;
-                try {
-                    age = Long.parseLong(child.child("age").getValue(String.class));
-                } catch (Exception ignored) {}
+                try { age = Long.parseLong(child.child("age").getValue(String.class)); } catch (Exception ignored) {}
 
                 if (eco == null || social == null || name == null || age == null) continue;
 
@@ -121,7 +160,8 @@ public class FindMatchFragment extends Fragment {
 
     private void showNext() {
         if (currentIndex < candidates.size()) {
-            MatchUser current = candidates.get(currentIndex);
+            currentTarget = candidates.get(currentIndex);
+            MatchUser current = currentTarget;
             nameTextView.setText(current.name);
             universityTextView.setText("University: " + (current.university != null ? current.university : "N/A"));
             jobTitleTextView.setText("Job: " + (current.jobTitle != null ? current.jobTitle : "N/A"));
@@ -129,6 +169,7 @@ public class FindMatchFragment extends Fragment {
             sexualityTextView.setText("Sexuality: " + (current.sexuality != null ? current.sexuality : "N/A"));
             ageTextView.setText("Age: " + current.age);
         } else {
+            currentTarget = null;
             nameTextView.setText("Keine weiteren Vorschläge");
             universityTextView.setText("");
             jobTitleTextView.setText("");
@@ -170,7 +211,6 @@ public class FindMatchFragment extends Fragment {
             }
         });
 
-        // Save Match (LIKE) in /Matches
         String matchId = FirebaseDatabase.getInstance().getReference("Matches").push().getKey();
         if (matchId != null) {
             DatabaseReference matchRef = FirebaseDatabase.getInstance().getReference("Matches").child(matchId);
@@ -192,7 +232,6 @@ public class FindMatchFragment extends Fragment {
             updateSocialScore(target.uid);
         });
 
-        // Save Match (DISLIKE) in /Matches
         String matchId = FirebaseDatabase.getInstance().getReference("Matches").push().getKey();
         if (matchId != null) {
             DatabaseReference matchRef = FirebaseDatabase.getInstance().getReference("Matches").child(matchId);
@@ -204,12 +243,7 @@ public class FindMatchFragment extends Fragment {
     }
 
     public static class MatchUser {
-        public String uid;
-        public String name;
-        public String university;
-        public String jobTitle;
-        public String homeTown;
-        public String sexuality;
+        public String uid, name, university, jobTitle, homeTown, sexuality;
         public Long age;
         public double score;
 
@@ -227,9 +261,7 @@ public class FindMatchFragment extends Fragment {
     }
 
     public static class Match {
-        public String user1;
-        public String user2;
-        public String status;
+        public String user1, user2, status;
         public long timestamp;
 
         public Match() {}
