@@ -2,7 +2,7 @@ import os
 import random
 import firebase_admin
 from firebase_admin import credentials, db, auth
-import itertools
+import time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 cred_path = os.path.join(BASE_DIR, "serviceAccountKey.json")
@@ -23,6 +23,15 @@ universities = ["HWR Berlin", "TU Munich", "Uni Hamburg", "Uni Cologne", "Goethe
 jobs = ["Software Engineer", "Data Analyst", "Consultant", "Researcher", "Student Assistant"]
 languages_pool = ["German", "English", "Spanish", "French", "Japanese"]
 hobbies = ["Reading", "Sports", "Gaming", "Music", "Traveling"]
+comment_texts = [
+    "Hey, nice profile!",
+    "Cool interests, let's chat!",
+    "I like your vibe!",
+    "Eco score is impressive!",
+    "Let's connect :)",
+    "Great match, what do you think?",
+    "This app is fun!"
+]
 
 # Alle User-Uids holen
 all_uids = []
@@ -51,37 +60,54 @@ for uid in all_uids:
         "usageOfDrugs": random.choice(["Never", "Occasionally", "Frequently"]),
         "hobbies": random.sample(hobbies, k=random.randint(1, 3))
     }
-    user_ref = db.reference(f"Users/{uid}")
-    user_ref.update(user_data)
+    db.reference(f"Users/{uid}").update(user_data)
 
-    eco_val = db.reference(f"Users/{uid}/ecoScore").get()
-    social_val = db.reference(f"Users/{uid}/socialScore").get()
-    print(f"✅ {uid}: ecoScore={eco_val}, socialScore={social_val}")
+print("✅ Profile aktualisiert.")
 
-# ✅ Auto-Matching: Jeder mit jedem
-print("\n🔗 Erstelle Matches zwischen allen Usern...")
+# ✅ Matches: Jeder User matched mit 3-5 zufälligen anderen Nutzern
+print("\n🔗 Erstelle begrenzte Matches...")
 matches_ref = db.reference("Matches")
 
-for uid1, uid2 in itertools.combinations(all_uids, 2):  # Alle einzigartigen Paare
-    # Like-Einträge gegenseitig setzen
-    db.reference(f"Users/{uid1}/likes/{uid2}").set(True)
-    db.reference(f"Users/{uid2}/likes/{uid1}").set(True)
+for uid in all_uids:
+    # Zufällige andere Nutzer auswählen
+    potential_matches = [u for u in all_uids if u != uid]
+    match_partners = random.sample(potential_matches, min(len(potential_matches), random.randint(3, 5)))
 
-    # Matches setzen
-    db.reference(f"Users/{uid1}/matches/{uid2}").set(True)
-    db.reference(f"Users/{uid2}/matches/{uid1}").set(True)
+    for partner in match_partners:
+        # Like gegenseitig setzen
+        db.reference(f"Users/{uid}/likes/{partner}").set(True)
+        db.reference(f"Users/{partner}/likes/{uid}").set(True)
 
-    # Optional: Like-Zähler hochsetzen
-    db.reference(f"Users/{uid1}/likedByCount").set(len(all_uids)-1)
-    db.reference(f"Users/{uid2}/likedByCount").set(len(all_uids)-1)
+        # Match gegenseitig setzen
+        db.reference(f"Users/{uid}/matches/{partner}").set(True)
+        db.reference(f"Users/{partner}/matches/{uid}").set(True)
 
-    # Match-Eintrag in /Matches erstellen
-    match_id = matches_ref.push().key
-    matches_ref.child(match_id).set({
-        "user1": uid1,
-        "user2": uid2,
-        "status": "like",
-        "timestamp": firebase_admin.firestore.SERVER_TIMESTAMP if hasattr(firebase_admin, "firestore") else None
-    })
+        # Match in globalem /Matches-Knoten speichern
+        match_id = matches_ref.push().key
+        matches_ref.child(match_id).set({
+            "user1": uid,
+            "user2": partner,
+            "status": "like",
+            "timestamp": int(time.time() * 1000)
+        })
 
-print("🎉 Alle User haben jetzt Matches miteinander!")
+print("🎉 Jeder User hat jetzt 3-5 Matches!")
+
+# 🗨️ Kommentare hinzufügen
+print("\n💬 Füge zufällige Kommentare hinzu...")
+for uid in all_uids:
+    comments_ref = db.reference(f"Users/{uid}/comments")
+    for _ in range(random.randint(2, 4)):  # 2–4 Kommentare pro User
+        author_id = random.choice(all_uids)
+        if author_id == uid:
+            continue  # Kein Kommentar von sich selbst
+        comment = {
+            "authorId": author_id,
+            "authorName": db.reference(f"Users/{author_id}/name").get(),
+            "text": random.choice(comment_texts),
+            "timestamp": int(time.time() * 1000)
+        }
+        comments_ref.push(comment)
+    print(f"✅ Kommentare für {uid} hinzugefügt")
+
+print("✅ Fertig: Profile, Matches und Kommentare erstellt!")

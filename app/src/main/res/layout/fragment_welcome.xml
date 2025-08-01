@@ -42,7 +42,8 @@
         android:id="@+id/button_comments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Comments"/>    
+        android:text="View Comments"
+        android:layout_marginBottom="16dp" />
 
     <Button
         android:id="@+id/button_logout"
